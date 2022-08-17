@@ -1,9 +1,9 @@
-enum Role {a = 'SuperAdmin', b = 'Admin', c = 'Subscriber'};
+enum Role {SuperAdmin = 'SuperAdmin', Admin = 'Admin', Subscriber = 'Subscriber'};
 
 const json_list: Array<any> = [
-    ["Nav", "Deep", "Singh", "nav@gmail.com", 9876543210, Role.a, "Mohali", "1990-08-28"],
-    ["Dev", "Roy", "Kapoor", "dev@gmail.com", 9764523865, Role.b, "Delhi", "1995-09-18"],
-    ["Riya", " ", "Mathur", "riya@gmail.com", 9786354567, Role.c, "Mumbai", "2002-04-17"]
+    ["Nav", "Deep", "Singh", "nav@gmail.com", 9876543210, "Mohali", "1990-08-28"],
+    ["Dev", "Roy", "Kapoor", "dev@gmail.com", 9764523865, "Delhi", "1995-09-18"],
+    ["Riya", " ", "Mathur", "riya@gmail.com", 9786354567, "Mumbai", "2002-04-17"]
 ];
 
 
@@ -30,9 +30,8 @@ interface user_data {
     lastName: string;
     email: string;
     phone: number;
-    role: Role;
     address: string;
-    DOB: string;
+    DOB: any;
 }
 
 class User <T> implements create_table, delete_row_table, edit_row_table, hide_show_buttons, user_data {
@@ -44,7 +43,6 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
     lastName: string;
     email: string;
     phone: number;
-    role: Role;
     address: string;
     DOB: string;
 
@@ -54,16 +52,15 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
         this.lastName = arr[2];
         this.email = arr[3];
         this.phone = arr[4];
-        this.role = arr[5];
-        this.address = arr[6];      
-        this.DOB = arr[7];  
+        this.address = arr[5];      
+        this.DOB = arr[6];  
     }    
 
     createTable() : void {
         
-        document.getElementById("load").innerHTML = "Refresh Data";
+        DOM("load").innerHTML = "Refresh Data";
 
-        let table: string = "<table class='table_data'>" +
+        let table: string = "<table id='table_data'>" +
                                 "<tr>" +
                                     "<th> First Name </th>" +
                                     "<th> Middle Name </th>" +
@@ -85,7 +82,12 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
                              "<td id="+"lname_row"+count+">" +i.lastName+ "</td>" +
                              "<td id="+"email_row"+count+">" +i.email+ "</td>" +
                              "<td id="+"phone_row"+count+">" +i.phone+ "</td>" +
-                             "<td id="+"role_row"+count+">" +i.role+ "</td>" +
+                             "<td id="+"role_row"+count+">" + 
+                             "<form> <select> <option value=" +"SuperAdmin"+">" +Role.SuperAdmin+"</option>" + 
+                             "<option value=" +"Admin"+">" +Role.Admin+"</option>" +
+                             "<option value=" +"Subscriber"+">" +Role.Subscriber+"</option>" +
+                             "</select> </form>" +
+                             "</td>" +
                              "<td id="+"address_row"+count+">" +i.address+ "</td>" +    
                              "<td id="+"DOB_row"+count+">" +i.DOB+ "</td>" +                          
                              "<td>" + 
@@ -99,81 +101,88 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
             count++;
         }       
                             
-        document.getElementById('divison').innerHTML = table + "</table>";         
+        DOM('divison').innerHTML = table + "</table>";         
     }      
 
 
     delete_row(no: number): void {                                                                                                     //delete button functionality
-        document.getElementById("row"+no).style.visibility = "hidden";
+        DOM("row"+no).innerHTML="";
     }
 
     edit_row(no: number): void {                                                                                                       //edit button functionality
 
         User.prototype.hide_buttons(no);
     
-        let fname_data: string = document.getElementById("fname_row"+no).innerHTML;
-        let mname_data: string = document.getElementById("mname_row"+no).innerHTML;
-        let lname_data: string = document.getElementById("lname_row"+no).innerHTML;
-        let email_data: string = document.getElementById("email_row"+no).innerHTML;
-        let phone_data: string = document.getElementById("phone_row"+no).innerHTML;
-        let role_data: string = document.getElementById("role_row"+no).innerHTML;
-        let address_data: string = document.getElementById("address_row"+no).innerHTML;
-        let DOB_data: string = document.getElementById("DOB_row"+no).innerHTML;
+        let fname_data: string = DOM("fname_row"+no).innerHTML;
+        let mname_data: string = DOM("mname_row"+no).innerHTML;
+        let lname_data: string = DOM("lname_row"+no).innerHTML;
+        let email_data: string = DOM("email_row"+no).innerHTML;
+        let phone_data: string = DOM("phone_row"+no).innerHTML;
+        let address_data: string = DOM("address_row"+no).innerHTML;
+        let DOB_data: string = DOM("DOB_row"+no).innerHTML;
         
     
-        document.getElementById("fname_row"+no).innerHTML = "<input type='text' id='fname_text"+no+"' value='"+fname_data+"'>";
-        document.getElementById("mname_row"+no).innerHTML = "<input type='text' id='mname_text"+no+"' value='"+mname_data+"'>";
-        document.getElementById("lname_row"+no).innerHTML = "<input type='text' id='lname_text"+no+"' value='"+lname_data+"'>";
-        document.getElementById("email_row"+no).innerHTML = "<input type='text' id='email_text"+no+"' value='"+email_data+"'>";
-        document.getElementById("phone_row"+no).innerHTML = "<input type='text' id='phone_text"+no+"' value='"+phone_data+"'>";
-        document.getElementById("role_row"+no).innerHTML = "<input type='text' id='role_text"+no+"' value='"+role_data+"'>";
-        document.getElementById("address_row"+no).innerHTML = "<input type='text' id='address_text"+no+"' value='"+address_data+"'>";
-        document.getElementById("DOB_row"+no).innerHTML = "<input type='date' id='DOB_text"+no+"' value='DOB_data'>";
+        DOM("fname_row"+no).innerHTML = inputField("fname_text"+no, fname_data);
+        DOM("mname_row"+no).innerHTML = inputField("mname_text"+no, mname_data);
+        DOM("lname_row"+no).innerHTML = inputField("lname_text"+no, lname_data);
+        DOM("email_row"+no).innerHTML = inputField("email_text"+no, email_data);
+        DOM("phone_row"+no).innerHTML = inputField("phone_text"+no, phone_data);        
+        DOM("address_row"+no).innerHTML = inputField("address_text"+no, address_data);
+        DOM("DOB_row"+no).innerHTML = "<input type='date' id='DOB_text"+no+"' value='DOB_data'>";
     
-        document.getElementById("cancel_button"+no).addEventListener("click", function (): void {                                       //cancel button functionality
+        DOM("cancel_button"+no).addEventListener("click", function (): void {                                                         //cancel button functionality
     
-            document.getElementById("fname_row"+no).innerHTML = fname_data;
-            document.getElementById("mname_row"+no).innerHTML = mname_data;
-            document.getElementById("lname_row"+no).innerHTML = lname_data;
-            document.getElementById("email_row"+no).innerHTML = email_data;
-            document.getElementById("phone_row"+no).innerHTML = phone_data;
-            document.getElementById("role_row"+no).innerHTML = role_data;
-            document.getElementById("address_row"+no).innerHTML = address_data;
-            document.getElementById("DOB_row"+no).innerHTML = DOB_data;
+            DOM("fname_row"+no).innerHTML = fname_data;
+            DOM("mname_row"+no).innerHTML = mname_data;
+            DOM("lname_row"+no).innerHTML = lname_data;
+            DOM("email_row"+no).innerHTML = email_data;
+            DOM("phone_row"+no).innerHTML = phone_data;            
+            DOM("address_row"+no).innerHTML = address_data;
+            DOM("DOB_row"+no).innerHTML = DOB_data;
          
             User.prototype.show_buttons(no);
         });
     
-        document.getElementById("save_button"+no).addEventListener("click", function (): void {                                         //save button functionality
+        DOM("save_button"+no).addEventListener("click", function (): void {                                                           //save button functionality
             
-            document.getElementById("fname_row"+no).innerHTML = (document.getElementById("fname_text"+no) as HTMLInputElement).value;
-            document.getElementById("mname_row"+no).innerHTML = (document.getElementById("mname_text"+no) as HTMLInputElement).value;
-            document.getElementById("lname_row"+no).innerHTML = (document.getElementById("lname_text"+no) as HTMLInputElement).value;
-            document.getElementById("email_row"+no).innerHTML = (document.getElementById("email_text"+no) as HTMLInputElement).value;
-            document.getElementById("phone_row"+no).innerHTML = (document.getElementById("phone_text"+no) as HTMLInputElement).value;
-            document.getElementById("role_row"+no).innerHTML = (document.getElementById("role_text"+no) as HTMLInputElement).value;
-            document.getElementById("address_row"+no).innerHTML = (document.getElementById("address_text"+no) as HTMLInputElement).value;
-            document.getElementById("DOB_row"+no).innerHTML = (document.getElementById("DOB_text"+no) as HTMLInputElement).value;
+            DOM("fname_row"+no).innerHTML = (DOM("fname_text"+no) as HTMLInputElement).value;
+            DOM("mname_row"+no).innerHTML = (DOM("mname_text"+no) as HTMLInputElement).value;
+            DOM("lname_row"+no).innerHTML = (DOM("lname_text"+no) as HTMLInputElement).value;
+            DOM("email_row"+no).innerHTML = (DOM("email_text"+no) as HTMLInputElement).value;
+            DOM("phone_row"+no).innerHTML = (DOM("phone_text"+no) as HTMLInputElement).value;            
+            DOM("address_row"+no).innerHTML = (DOM("address_text"+no) as HTMLInputElement).value;               
+            if(((DOM("DOB_text"+no) as HTMLInputElement).value) === "") DOM("DOB_row"+no).innerHTML = DOB_data;
+            else DOM("DOB_row"+no).innerHTML = (DOM("DOB_text"+no) as HTMLInputElement).value;
     
             User.prototype.show_buttons(no);
         });
     
     }
 
-    hide_buttons(no: number): void {                                                                                                   //hide edit and delete button.
-        document.getElementById("edit_button"+no).style.display = "none";
-        document.getElementById("save_button"+no).style.display = "block";
-        document.getElementById("delete_button"+no).style.display = "none";
-        document.getElementById("cancel_button"+no).style.display = "block";
+    hide_buttons(no: number): void {                                                                                                  //hide edit and delete button.
+        DOM("edit_button"+no).style.display = "none";
+        DOM("save_button"+no).style.display = "block";
+        DOM("delete_button"+no).style.display = "none";
+        DOM("cancel_button"+no).style.display = "block";
     }
     
-    show_buttons(no: number): void {                                                                                                   //show edit and delete button.
-        document.getElementById("edit_button"+no).style.display = "block";
-        document.getElementById("save_button"+no).style.display = "none";
-        document.getElementById("delete_button"+no).style.display = "block";
-        document.getElementById("cancel_button"+no).style.display = "none";
+    show_buttons(no: number): void {                                                                                                  //show edit and delete button.
+        DOM("edit_button"+no).style.display = "block";
+        DOM("save_button"+no).style.display = "none";
+        DOM("delete_button"+no).style.display = "block";
+        DOM("cancel_button"+no).style.display = "none";
     }
+   
 }
+
+function DOM(id: string): HTMLElement {
+    return(document.getElementById(id));
+}
+
+function inputField(id: string, val: string): string {
+    return("<input type='text' id='" +id+ "' value='" +val+ "'>")
+}
+
 
 function main(): void {   
 
@@ -185,5 +194,5 @@ function main(): void {
 }
 
 function today(): void {
-    document.getElementById("date_time").innerHTML = Date();
+    DOM("date_time").innerHTML = Date();
 }
