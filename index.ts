@@ -1,9 +1,9 @@
-enum Role {SuperAdmin = 'SuperAdmin', Admin = 'Admin', Subscriber = 'Subscriber'};
+enum Role {SuperAdmin, Admin, Subscriber};
 
 const json_list: Array<any> = [
-    ["Nav", "Deep", "Singh", "nav@gmail.com", 9876543210, "Mohali", "1990-08-28"],
-    ["Dev", "Roy", "Kapoor", "dev@gmail.com", 9764523865, "Delhi", "1995-09-18"],
-    ["Riya", " ", "Mathur", "riya@gmail.com", 9786354567, "Mumbai", "2002-04-17"]
+    ["Nav", "Deep", "Singh", "nav@gmail.com", 9876543210, 0, "Mohali", "1990-08-28"],
+    ["Dev", "Roy", "Kapoor", "dev@gmail.com", 9764523865, 1, "Delhi", "1995-09-18"],
+    ["Riya", " ", "Mathur", "riya@gmail.com", 9786354567, 2, "Mumbai", "2002-04-17"]
 ];
 
 
@@ -30,11 +30,12 @@ interface user_data {
     lastName: string;
     email: string;
     phone: number;
+    role: Role;
     address: string;
-    DOB: any;
+    DOB: string;
 }
 
-class User <T> implements create_table, delete_row_table, edit_row_table, hide_show_buttons, user_data {
+class User implements create_table, delete_row_table, edit_row_table, hide_show_buttons, user_data {
     
     static list: any = [];
 
@@ -43,6 +44,7 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
     lastName: string;
     email: string;
     phone: number;
+    role: Role;
     address: string;
     DOB: string;
 
@@ -52,8 +54,9 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
         this.lastName = arr[2];
         this.email = arr[3];
         this.phone = arr[4];
-        this.address = arr[5];      
-        this.DOB = arr[6];  
+        this.role = arr[5]
+        this.address = arr[6];      
+        this.DOB = arr[7];  
     }    
 
     createTable() : void {
@@ -82,12 +85,7 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
                              "<td id="+"lname_row"+count+">" +i.lastName+ "</td>" +
                              "<td id="+"email_row"+count+">" +i.email+ "</td>" +
                              "<td id="+"phone_row"+count+">" +i.phone+ "</td>" +
-                             "<td id="+"role_row"+count+">" + 
-                             "<form> <select> <option value=" +"SuperAdmin"+">" +Role.SuperAdmin+"</option>" + 
-                             "<option value=" +"Admin"+">" +Role.Admin+"</option>" +
-                             "<option value=" +"Subscriber"+">" +Role.Subscriber+"</option>" +
-                             "</select> </form>" +
-                             "</td>" +
+                             "<td id="+"role_row"+count+">" +Role[i.role]+ "</td>" + 
                              "<td id="+"address_row"+count+">" +i.address+ "</td>" +    
                              "<td id="+"DOB_row"+count+">" +i.DOB+ "</td>" +                          
                              "<td>" + 
@@ -118,6 +116,8 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
         let lname_data: string = DOM("lname_row"+no).innerHTML;
         let email_data: string = DOM("email_row"+no).innerHTML;
         let phone_data: string = DOM("phone_row"+no).innerHTML;
+        let role_data: string = DOM("role_row"+no).innerHTML;
+        console.log(role_data);      
         let address_data: string = DOM("address_row"+no).innerHTML;
         let DOB_data: string = DOM("DOB_row"+no).innerHTML;
         
@@ -126,7 +126,8 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
         DOM("mname_row"+no).innerHTML = inputField("mname_text"+no, mname_data);
         DOM("lname_row"+no).innerHTML = inputField("lname_text"+no, lname_data);
         DOM("email_row"+no).innerHTML = inputField("email_text"+no, email_data);
-        DOM("phone_row"+no).innerHTML = inputField("phone_text"+no, phone_data);        
+        DOM("phone_row"+no).innerHTML = inputField("phone_text"+no, phone_data);
+        DOM("role_row"+no).innerHTML = "<form> <select id=role_text"+no+"> <option value=" +Role[0]+">" +Role[0]+"</option> <option value=" +Role[1]+">" +Role[1]+"</option> <option value=" +Role[2]+">" +Role[2]+"</option>" +"</select> </form>";
         DOM("address_row"+no).innerHTML = inputField("address_text"+no, address_data);
         DOM("DOB_row"+no).innerHTML = "<input type='date' id='DOB_text"+no+"' value='DOB_data'>";
     
@@ -136,7 +137,8 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
             DOM("mname_row"+no).innerHTML = mname_data;
             DOM("lname_row"+no).innerHTML = lname_data;
             DOM("email_row"+no).innerHTML = email_data;
-            DOM("phone_row"+no).innerHTML = phone_data;            
+            DOM("phone_row"+no).innerHTML = phone_data; 
+            DOM("role_row"+no).innerHTML = role_data;            
             DOM("address_row"+no).innerHTML = address_data;
             DOM("DOB_row"+no).innerHTML = DOB_data;
          
@@ -149,7 +151,8 @@ class User <T> implements create_table, delete_row_table, edit_row_table, hide_s
             DOM("mname_row"+no).innerHTML = (DOM("mname_text"+no) as HTMLInputElement).value;
             DOM("lname_row"+no).innerHTML = (DOM("lname_text"+no) as HTMLInputElement).value;
             DOM("email_row"+no).innerHTML = (DOM("email_text"+no) as HTMLInputElement).value;
-            DOM("phone_row"+no).innerHTML = (DOM("phone_text"+no) as HTMLInputElement).value;            
+            DOM("phone_row"+no).innerHTML = (DOM("phone_text"+no) as HTMLInputElement).value; 
+            DOM("role_row"+no).innerHTML = (DOM("role_text"+no) as HTMLInputElement).value;            
             DOM("address_row"+no).innerHTML = (DOM("address_text"+no) as HTMLInputElement).value;               
             if(((DOM("DOB_text"+no) as HTMLInputElement).value) === "") DOM("DOB_row"+no).innerHTML = DOB_data;
             else DOM("DOB_row"+no).innerHTML = (DOM("DOB_text"+no) as HTMLInputElement).value;
